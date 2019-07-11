@@ -243,5 +243,9 @@ bool Ekf::gps_is_good(const gps_message &gps)
 	}
 
 	// continuous period without fail of 10 seconds required to return a healthy status
-	return (_time_last_imu - _last_gps_fail_us > (uint64_t)1e7);
+	uint64_t min_gps_health_time_us = (uint64_t)1e7;
+#ifndef CONFIG_ARCH_BOARD_PX4_SITL // 0.5s for SITL
+	min_gps_health_time_us = (uint64_t)5e5;
+#endif // CONFIG_ARCH_BOARD_PX4_SITL
+	return (_time_last_imu - _last_gps_fail_us > min_gps_health_time_us);
 }
