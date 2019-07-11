@@ -116,8 +116,10 @@ DataValidator::confidence(uint64_t timestamp)
 
 	} else if (_value_equal_count > _value_equal_count_threshold) {
 		/* we got the exact same sensor value N times in a row */
+#ifndef CONFIG_ARCH_BOARD_PX4_SITL // enable noiseless SITL
 		_error_mask |= ERROR_FLAG_STALE_DATA;
 		ret = 0.0f;
+#endif // CONFIG_ARCH_BOARD_PX4_SITL
 
 	} else if (_error_count > NORETURN_ERRCOUNT) {
 		/* check error count limit */
